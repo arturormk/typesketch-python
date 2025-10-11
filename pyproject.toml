@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "typesketch"
+version = "0.1.0"
+description = "Emit a type-oriented YAML sketch from JSON"
+authors = [{name="Software Curator", email="maintainers@example.com"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+typesketch = "typesketch.cli:main"
+
+[tool.ruff]
+line-length = 100
+select = ["E","F","I"]
