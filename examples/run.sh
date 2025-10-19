@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cat "$(dirname "$0")/poi.json" | typesketch --root POIs
+
+HERE="$(cd "$(dirname "$0")" && pwd)"
+echo "[DEPRECATED] examples/run.sh has been renamed to examples/run-poi_json.sh" 1>&2
+exec "$HERE/run-poi_json.sh"

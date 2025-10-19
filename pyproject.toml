@@ -4,17 +4,35 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "typesketch"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Emit a type-oriented YAML sketch from JSON"
-authors = [{name="Software Curator", email="maintainers@example.com"}]
+authors = [{name="Arturo R."}]
 license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = []
+keywords = ["yaml", "json", "schema", "cli", "typing"]
+classifiers = [
+	"Programming Language :: Python :: 3",
+	"License :: OSI Approved :: MIT License",
+	"Intended Audience :: Developers",
+	"Topic :: Software Development :: Code Generators",
+]
 
 [project.scripts]
 typesketch = "typesketch.cli:main"
 
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.dynamic]
+version = { attr = "typesketch.__version__" }
+
 [tool.ruff]
 line-length = 100
+
+[tool.ruff.lint]
 select = ["E","F","I"]

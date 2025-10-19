@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 import re
 
-RE_URL = re.compile(r'^https?://', re.I)
-RE_EMAIL = re.compile(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
-RE_ISO_DT = re.compile(r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}')
+RE_URL = re.compile(r"^https?://", re.I)
+RE_EMAIL = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+RE_ISO_DT = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}")
+
 
 def detect_string_format(s: str) -> str:
     if RE_URL.match(s):

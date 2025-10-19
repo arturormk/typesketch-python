@@ -6,6 +6,54 @@
 ## Why
 When exploring unfamiliar APIs, we often need a *human‑readable* schema sketch rather than a full JSON Schema. TypeSketch summarizes field shapes, union types, and common formats (url, datetime, email, html-string) directly from example payloads.
 
+## TL;DR
+Quick taste using a free, real API (no install needed, run the module directly):
+
+```bash
+git clone https://github.com/arturormk/typesketch-python
+cd typesketch-python/src
+
+# Pipe Open Library search results directly into the CLI module
+curl -s 'https://openlibrary.org/search.json?q=python&limit=5' | python3 -m typesketch.cli
+```
+
+Example output:
+
+```yaml
+docs:
+  -
+    author_key:
+      - string
+    author_name:
+      - string
+    cover_edition_key: string
+    cover_i: int
+    ebook_access: string
+    edition_count: int
+    first_publish_year: int
+    has_fulltext: boolean
+    key: string
+    language:
+      - string
+    public_scan_b: boolean
+    title: string
+    ia:
+      - string
+    ia_collection_s: string
+    lending_edition_s: string
+    lending_identifier_s: string
+    subtitle: string
+documentation_url: url
+numFound: int
+numFoundExact: boolean
+num_found: int
+offset: null
+q: string
+start: int
+```
+
+That’s a concise “type sketch” of the response — handy for docs, quick API archaeology, or bootstrapping code.
+
 ## Features
 - Infer scalar/union types and simple format hints
 - Expand arrays of objects as proper YAML lists (no angle‑brackets)
@@ -59,3 +107,6 @@ See `typesketch --help`.
 
 ## License
 MIT — see `LICENSE`.
+
+## Attribution & Curation
+This project is AI-assisted and human-curated. Significant changes are documented via ADRs and validated by tests. See [ADR-0010](docs/adr/ADR-0010-ai-curation-policy.md) for the AI curation policy. Maintainers are listed in `AUTHORS`.

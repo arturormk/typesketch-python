@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+HERE="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$HERE/.." && pwd)"
+
+# Prefer installed console script; otherwise run module with local src
+if command -v typesketch >/dev/null 2>&1; then
+  CMD=(typesketch)
+else
+  PY_BIN="python3"
+  if ! command -v "$PY_BIN" >/dev/null 2>&1; then
+    PY_BIN="python"
+  fi
+  export PYTHONPATH="$ROOT/src${PYTHONPATH:+:$PYTHONPATH}"
+  CMD=("$PY_BIN" -m typesketch.cli)
+fi
+
+# Read from stdin and pass through unchanged; no --root here
+"${CMD[@]}" < /dev/stdin

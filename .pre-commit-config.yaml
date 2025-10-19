@@ -1,15 +1,64 @@
 repos:
-  - repo: https://github.com/psf/black
-    rev: 24.8.0
+  # Basic file hygiene
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
     hooks:
-      - id: black
-  - repo: https://github.com/pycqa/ruff-pre-commit
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+        args: ['--maxkb=100']
+
+  # Python formatting and linting
+  - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.6.3
     hooks:
       - id: ruff
         args: [--fix]
+      - id: ruff-format
+
+  # Type checking
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.10.0
     hooks:
       - id: mypy
+        args: ['--strict','src','tests','scripts']
+        pass_filenames: false
         additional_dependencies: []
+
+  # Import smoke test
+  - repo: local
+    hooks:
+      - id: import-smoke
+        name: Import smoke test
+        entry: python
+        args: ['-c', 'import sys; sys.path.insert(0, "src"); import typesketch']
+        language: system
+        pass_filenames: false
+        files: '^src/.*\.py$'
+
+      # ADR index checker
+      - id: adr-index
+        name: ADR index checker
+        entry: python
+        args: ['scripts/check_adr_index.py']
+        language: system
+        pass_filenames: false
+        files: '^docs/adr/.*\.md$'
+
+      # Print statement blocker
+      - id: check-prints
+        name: Check print statements
+        entry: python
+        args: ['scripts/check_prints.py']
+        language: system
+        pass_filenames: false
+        files: '\.py$'
+
+      # Fast tests on push
+      - id: fast-tests
+        name: Fast tests (pre-push)
+        entry: bash
+        args: ['scripts/fast_tests.sh']
+        language: system
+        pass_filenames: false
+        stages: [pre-push]

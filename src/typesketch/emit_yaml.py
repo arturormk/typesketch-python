@@ -1,5 +1,7 @@
 from __future__ import annotations
-from typing import Any, Dict, List, Union
+
+from typing import Any, List
+
 
 def _to_yaml(obj: Any, indent: int = 0, step: int = 2) -> List[str]:
     sp = " " * (indent * step)
@@ -8,13 +10,13 @@ def _to_yaml(obj: Any, indent: int = 0, step: int = 2) -> List[str]:
         for k, v in obj.items():
             if isinstance(v, dict):
                 lines.append(f"{sp}{k}:")
-                lines.extend(_to_yaml(v, indent+1, step))
+                lines.extend(_to_yaml(v, indent + 1, step))
             elif isinstance(v, list):
                 lines.append(f"{sp}{k}:")
                 for item in v:
                     if isinstance(item, dict):
                         lines.append(f"{sp}{' ' * step}-")
-                        lines.extend(_to_yaml(item, indent+2, step))
+                        lines.extend(_to_yaml(item, indent + 2, step))
                     else:
                         lines.append(f"{sp}{' ' * step}- {item}")
             else:
@@ -24,13 +26,14 @@ def _to_yaml(obj: Any, indent: int = 0, step: int = 2) -> List[str]:
         for item in obj:
             if isinstance(item, dict):
                 lines.append(f"{sp}-")
-                lines.extend(_to_yaml(item, indent+1, step))
+                lines.extend(_to_yaml(item, indent + 1, step))
             else:
                 lines.append(f"{sp}- {item}")
         return lines
     else:
         lines.append(f"{sp}{obj}")
         return lines
+
 
 def emit_yaml(shape: Any, root: str | None = None, indent: int = 2) -> str:
     lines: List[str] = []
