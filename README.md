@@ -1,7 +1,7 @@
 # TypeSketch — infer a type‑oriented YAML from JSON
 > A tiny CLI that reads JSON from stdin and emits a concise, type‑oriented YAML **TypeSketch** — perfect for docs, quick API archeology, and codegen stubs.
 
-![status-badge](https://img.shields.io/badge/status-experimental-blue) ![license](https://img.shields.io/badge/license-MIT-green)
+[![CI](https://github.com/arturormk/typesketch-python/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/arturormk/typesketch-python/actions/workflows/ci.yml) ![license](https://img.shields.io/badge/license-MIT-green)
 
 ## Why
 When exploring unfamiliar APIs, we often need a *human‑readable* schema sketch rather than a full JSON Schema. TypeSketch summarizes field shapes, union types, and common formats (url, datetime, email, html-string) directly from example payloads.
