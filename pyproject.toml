@@ -7,14 +7,13 @@ name = "typesketch"
 dynamic = ["version"]
 description = "Emit a type-oriented YAML sketch from JSON"
 authors = [{name="Arturo R. Montesinos"}]
-license = {file = "LICENSE"}
+license = "MIT"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = []
 keywords = ["yaml", "json", "schema", "cli", "typing"]
 classifiers = [
 	"Programming Language :: Python :: 3",
-	"License :: OSI Approved :: MIT License",
 	"Intended Audience :: Developers",
 	"Topic :: Software Development :: Code Generators",
 ]
