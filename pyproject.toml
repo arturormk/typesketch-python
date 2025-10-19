@@ -6,8 +6,8 @@ build-backend = "setuptools.build_meta"
 name = "typesketch"
 dynamic = ["version"]
 description = "Emit a type-oriented YAML sketch from JSON"
-authors = [{name="Arturo R."}]
-license = {text = "MIT"}
+authors = [{name="Arturo R. Montesinos"}]
+license = {file = "LICENSE"}
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = []
