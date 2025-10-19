@@ -52,7 +52,7 @@ def check_all_prints() -> int:
                 print(f"  {violation}", file=sys.stderr)
         print("\nUse print(..., file=sys.stdout) or print(..., file=sys.stderr)", file=sys.stderr)
         return 1
-    
+
     print("✓ No raw print() statements found", file=sys.stdout)
     return 0
 

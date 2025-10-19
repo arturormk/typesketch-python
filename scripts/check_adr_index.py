@@ -32,7 +32,7 @@ def check_adr_index() -> int:
     if missing:
         print(f"ADRs missing from index: {', '.join(missing)}", file=sys.stderr)
         return 1
-    
+
     print(f"✓ All {len(adr_files)} ADRs are indexed", file=sys.stdout)
     return 0
 

@@ -63,7 +63,7 @@ def lint_all_adrs() -> int:
     if total_errors > 0:
         print(f"\nFound {total_errors} errors in ADR files", file=sys.stderr)
         return 1
-    
+
     print(f"\n✓ All {len(adr_files)} ADRs pass validation", file=sys.stdout)
     return 0
 
