@@ -1,0 +1,5 @@
+{"user_id": 1, "x.y-z": 1, "año": 1, "_private": 1,
+ "a: b": 1, "- x": 1, "": 1, "first name": 1, "123": 1,
+ "true": 1, "Null": 1, "no": 1, "#tag": 1, "say \"hi\"": 1,
+ "back\\slash": 1, "tab\there": 1, "@type": 1, "*ref": 1,
+ "nested": {"[0]": {"?": 1}}}

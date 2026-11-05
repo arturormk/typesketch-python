@@ -2,9 +2,25 @@
 
 from __future__ import annotations
 
+import json
+import re
 from typing import Any, List, Mapping, Sequence
 
 from .infer import Alternatives
+
+# Keys that are safe as plain YAML scalars: a letter or underscore, then
+# letters, digits, "_", "." or "-". Anything else is double-quoted.
+_PLAIN_KEY = re.compile(r"[^\W\d][\w.-]*")
+# Plain words YAML 1.1 or 1.2 would read as booleans or null.
+_RESERVED = {"true", "false", "yes", "no", "on", "off", "y", "n", "null"}
+
+
+def _key(name: str) -> str:
+    """Render a mapping key, quoting it when YAML would misread it."""
+    if _PLAIN_KEY.fullmatch(name) and name.lower() not in _RESERVED:
+        return name
+    # A JSON string literal is also a valid YAML double-quoted scalar.
+    return json.dumps(name, ensure_ascii=False)
 
 
 def _scalar(value: Any) -> str:
@@ -17,7 +33,8 @@ def _mapping(obj: Mapping[str, Any], level: int, step: int) -> List[str]:
     if not obj:
         return [f"{sp}object"]
     lines: List[str] = []
-    for k, v in obj.items():
+    for name, v in obj.items():
+        k = _key(name)
         comment = ""
         if isinstance(v, Alternatives):
             # The other types go in a comment: a YAML key can't hold both
@@ -61,7 +78,7 @@ def _to_yaml(obj: Any, level: int, step: int) -> List[str]:
 def emit_yaml(shape: Any, root: str | None = None, indent: int = 2) -> str:
     lines: List[str] = []
     if root:
-        lines.append(f"{root}:")
+        lines.append(f"{_key(root)}:")
         lines.extend(_to_yaml(shape, 1, indent))
     else:
         lines.extend(_to_yaml(shape, 0, indent))

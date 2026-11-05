@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from typing import Any
+from typing import Any, NoReturn
 
 from . import __version__
 from .emit_yaml import emit_yaml
@@ -53,16 +53,30 @@ def main() -> None:
     )
     args = ap.parse_args()
 
-    data = json.load(sys.stdin)
-    sys.stdout.write(
-        sketch(
+    try:
+        text = sys.stdin.buffer.read().decode("utf-8-sig")
+        if not text.strip():
+            _fail("no JSON on stdin")
+        data = json.loads(text)
+        out = sketch(
             data,
             root=args.root,
             force_list=args.force_list,
             array_samples=args.array_samples,
             indent=args.indent,
         )
-    )
+    except UnicodeDecodeError as e:
+        _fail(f"input is not valid UTF-8 ({e.reason} at byte {e.start})")
+    except json.JSONDecodeError as e:
+        _fail(f"invalid JSON on stdin: {e.msg} (line {e.lineno}, column {e.colno})")
+    except RecursionError:
+        _fail("input is nested too deeply")
+    sys.stdout.write(out)
+
+
+def _fail(message: str) -> NoReturn:
+    sys.stderr.write(f"typesketch: error: {message}\n")
+    sys.exit(1)
 
 
 if __name__ == "__main__":

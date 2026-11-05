@@ -1,0 +1,22 @@
+"my root":
+  "": int
+  "#tag": int
+  "*ref": int
+  "- x": int
+  "123": int
+  "@type": int
+  "Null": int
+  _private: int
+  "a: b": int
+  año: int
+  "back\\slash": int
+  "first name": int
+  nested:
+    "[0]":
+      "?": int
+  "no": int
+  "say \"hi\"": int
+  "tab\there": int
+  "true": int
+  user_id: int
+  x.y-z: int
