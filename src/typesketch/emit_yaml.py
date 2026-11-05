@@ -6,7 +6,7 @@ import json
 import re
 from typing import Any, List, Mapping, Sequence
 
-from .infer import Alternatives
+from .infer import Alternatives, ObjectShape
 
 # Keys that are safe as plain YAML scalars: a letter or underscore, then
 # letters, digits, "_", "." or "-". Anything else is double-quoted.
@@ -28,58 +28,69 @@ def _scalar(value: Any) -> str:
     return "object" if isinstance(value, dict) else str(value)
 
 
-def _mapping(obj: Mapping[str, Any], level: int, step: int) -> List[str]:
+def _mapping(obj: Mapping[str, Any], level: int, step: int, stats: bool) -> List[str]:
     sp = " " * (level * step)
     if not obj:
         return [f"{sp}object"]
     lines: List[str] = []
     for name, v in obj.items():
         k = _key(name)
-        comment = ""
+        notes: List[str] = []
         if isinstance(v, Alternatives):
             # The other types go in a comment: a YAML key can't hold both
             # a block and a scalar. See ADR-0004.
-            comment = f"  # also: {v.also}"
+            notes.append(f"also: {v.also}")
             v = v.shape
+        if stats and isinstance(obj, ObjectShape):
+            # Only optional fields get a count. See ADR-0006.
+            seen = obj.presence.get(name, obj.total)
+            if seen < obj.total:
+                notes.append(f"present in {seen} of {obj.total}")
+        comment = f"  # {'; '.join(notes)}" if notes else ""
         if isinstance(v, dict) and v:
             lines.append(f"{sp}{k}:{comment}")
-            lines.extend(_mapping(v, level + 1, step))
+            lines.extend(_mapping(v, level + 1, step, stats))
         elif isinstance(v, list):
             lines.append(f"{sp}{k}:{comment}")
-            lines.extend(_sequence(v, level + 1, step))
+            lines.extend(_sequence(v, level + 1, step, stats))
         else:
             lines.append(f"{sp}{k}: {_scalar(v)}{comment}")
     return lines
 
 
-def _sequence(items: Sequence[Any], level: int, step: int) -> List[str]:
+def _sequence(items: Sequence[Any], level: int, step: int, stats: bool) -> List[str]:
     sp = " " * (level * step)
     lines: List[str] = []
     for item in items:
         if isinstance(item, dict) and item:
             lines.append(f"{sp}-")
-            lines.extend(_mapping(item, level + 1, step))
+            lines.extend(_mapping(item, level + 1, step, stats))
         elif isinstance(item, list):
             lines.append(f"{sp}-")
-            lines.extend(_sequence(item, level + 1, step))
+            lines.extend(_sequence(item, level + 1, step, stats))
         else:
             lines.append(f"{sp}- {_scalar(item)}")
     return lines
 
 
-def _to_yaml(obj: Any, level: int, step: int) -> List[str]:
+def _to_yaml(obj: Any, level: int, step: int, stats: bool) -> List[str]:
     if isinstance(obj, dict):
-        return _mapping(obj, level, step)
+        return _mapping(obj, level, step, stats)
     if isinstance(obj, list):
-        return _sequence(obj, level, step)
+        return _sequence(obj, level, step, stats)
     return [f"{' ' * (level * step)}{obj}"]
 
 
-def emit_yaml(shape: Any, root: str | None = None, indent: int = 2) -> str:
+def emit_yaml(shape: Any, root: str | None = None, indent: int = 2, stats: bool = False) -> str:
+    """Render ``shape`` as YAML.
+
+    With ``stats``, fields missing from some of the merged objects get a
+    ``# present in N of M`` comment.
+    """
     lines: List[str] = []
     if root:
         lines.append(f"{_key(root)}:")
-        lines.extend(_to_yaml(shape, 1, indent))
+        lines.extend(_to_yaml(shape, 1, indent, stats))
     else:
-        lines.extend(_to_yaml(shape, 0, indent))
+        lines.extend(_to_yaml(shape, 0, indent, stats))
     return "\n".join(lines) + "\n"

@@ -16,6 +16,7 @@ def sketch(
     force_list: bool = False,
     array_samples: int = 200,
     indent: int = 2,
+    stats: bool = False,
 ) -> str:
     """Return the TypeSketch YAML for one parsed JSON document."""
     shape: Shape
@@ -26,7 +27,7 @@ def sketch(
         shape = [merged] if force_list else merged
     else:
         shape = {"value": scalar_type(data)}
-    return emit_yaml(shape, root=root, indent=indent)
+    return emit_yaml(shape, root=root, indent=indent, stats=stats)
 
 
 def main() -> None:
@@ -49,7 +50,7 @@ def main() -> None:
     ap.add_argument(
         "--stats",
         action="store_true",
-        help="Emit key-frequency stats as YAML comments (TODO)",
+        help="Note fields missing from some records, as '# present in N of M' comments",
     )
     args = ap.parse_args()
 
@@ -64,6 +65,7 @@ def main() -> None:
             force_list=args.force_list,
             array_samples=args.array_samples,
             indent=args.indent,
+            stats=args.stats,
         )
     except UnicodeDecodeError as e:
         _fail(f"input is not valid UTF-8 ({e.reason} at byte {e.start})")

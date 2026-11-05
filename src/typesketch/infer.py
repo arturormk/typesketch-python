@@ -3,7 +3,9 @@
 A shape is one of:
 
 - ``str``: a scalar type or union, e.g. ``"int"`` or ``"string | null"``
-- ``dict``: an object, mapping each field name to its shape
+- ``dict``: an object, mapping each field name to its shape; merged
+  objects are ``ObjectShape`` instances, which also record how many of the
+  merged objects had each field
 - ``list``: an array, holding one shape per kind of item seen (object,
   array, scalars), in that order
 - ``Alternatives``: an object or array shape that is sometimes replaced by
@@ -22,6 +24,19 @@ from typing import Any, Dict, Iterable, List, Sequence, Tuple, Union
 from .detectors import detect_string_format
 
 DEFAULT_SAMPLES = 200
+
+
+class ObjectShape(Dict[str, "Shape"]):
+    """Merged object shape that also records how often each field appeared.
+
+    ``presence[field]`` is the number of merged objects that had the field,
+    out of ``total`` objects merged. See ADR-0006.
+    """
+
+    def __init__(self, fields: Dict[str, Shape], presence: Dict[str, int], total: int) -> None:
+        super().__init__(fields)
+        self.presence = presence
+        self.total = total
 
 
 @dataclass(frozen=True)
@@ -134,17 +149,19 @@ def merge_objects(
     objs: Sequence[Dict[str, Any]],
     sample_n: int = DEFAULT_SAMPLES,
     max_array: int = DEFAULT_SAMPLES,
-) -> Dict[str, Shape]:
+) -> ObjectShape:
     """Merge the first ``sample_n`` objects into one shape.
 
     Fields are ordered by how many objects have them, then alphabetically.
     """
     key_counts: Counter[str] = Counter()
     field_vals: defaultdict[str, List[Any]] = defaultdict(list)
-    for o in objs[:sample_n]:
+    sampled = objs[:sample_n]
+    for o in sampled:
         for k, v in o.items():
             key_counts[k] += 1
             field_vals[k].append(v)
 
     keys = sorted(field_vals, key=lambda k: (-key_counts[k], k))
-    return {k: infer_values(field_vals[k], max_array=max_array) for k in keys}
+    fields = {k: infer_values(field_vals[k], max_array=max_array) for k in keys}
+    return ObjectShape(fields, dict(key_counts), len(sampled))

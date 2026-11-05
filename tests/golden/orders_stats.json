@@ -1,0 +1,11 @@
+[
+  {"id": 101, "total": 24.5, "paid": true,
+   "customer": {"name": "Ana", "email": "ana@example.com"},
+   "items": [{"sku": "A-1", "qty": 2}],
+   "created": "2025-03-01T09:30:00Z"},
+  {"id": 102, "total": 8, "paid": false, "coupon": null,
+   "customer": {"name": "Ben", "email": "ben@example.com"},
+   "items": [{"sku": "B-7", "qty": 1}],
+   "created": "2025-03-02T14:05:00Z",
+   "receipt": "https://shop.example.com/r/102"}
+]

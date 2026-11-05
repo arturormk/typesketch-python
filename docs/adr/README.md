@@ -12,6 +12,7 @@ This directory contains Architecture Decision Records (ADRs) for the TypeSketch 
 | [ADR-0003](ADR-0003-heuristics.md) | Inference Heuristics | Accepted |
 | [ADR-0004](ADR-0004-shape-merging.md) | Shape Merging Across Records | Proposed |
 | [ADR-0005](ADR-0005-key-quoting-and-input-errors.md) | Key Quoting and Input Errors | Proposed |
+| [ADR-0006](ADR-0006-presence-stats.md) | Presence Stats | Proposed |
 | [ADR-0010](ADR-0010-ai-curation-policy.md) | AI Curation Policy | Accepted |
 
 ## Template

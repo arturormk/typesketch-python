@@ -18,7 +18,7 @@ def test_scalar_and_array_unions() -> None:
     payload = '[{"id":1,"tag":["a",2],"url":"https://x"}, {"id":2,"tag":[3]}]'
     out = run_cli(payload)
     assert "id: int" in out
-    assert "- string | int" in out or "array<string | int>" in out
+    assert "- string | int" in out
     assert "url: url" in out
 
 

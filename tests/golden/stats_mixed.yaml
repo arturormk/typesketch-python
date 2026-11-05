@@ -1,0 +1,11 @@
+-
+  id: int
+  items:  # present in 2 of 3
+    -
+      sku: string
+      note: string  # present in 1 of 3
+  owner:  # also: null; present in 2 of 3
+    name: string
+    phone: string
+  tags:  # present in 1 of 3
+    - string
