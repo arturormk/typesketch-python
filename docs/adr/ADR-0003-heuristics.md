@@ -8,7 +8,7 @@ We need deterministic, simple heuristics to infer types from JSON samples withou
 ## Decision
 - Scalar types: int, number, boolean, null, string.
 - Simple format hints: url, email, datetime, html-string.
-- Arrays: merge shapes of item objects; scalar arrays use union (`string | int`).
+- Arrays: merge shapes of item objects; scalar arrays use union (`string | int`). Detailed merge rules: ADR-0004.
 - Key ordering: by frequency desc, then alpha as tiebreaker.
 - Limits: arrays are sampled (default 200). No deep recursion guards yet.
 

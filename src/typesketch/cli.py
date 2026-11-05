@@ -7,7 +7,26 @@ from typing import Any
 
 from . import __version__
 from .emit_yaml import emit_yaml
-from .infer import merge_objects
+from .infer import Shape, array_shape, merge_objects, scalar_type
+
+
+def sketch(
+    data: Any,
+    root: str | None = None,
+    force_list: bool = False,
+    array_samples: int = 200,
+    indent: int = 2,
+) -> str:
+    """Return the TypeSketch YAML for one parsed JSON document."""
+    shape: Shape
+    if isinstance(data, list):
+        shape = array_shape([data], max_array=array_samples)
+    elif isinstance(data, dict):
+        merged = merge_objects([data], sample_n=array_samples, max_array=array_samples)
+        shape = [merged] if force_list else merged
+    else:
+        shape = {"value": scalar_type(data)}
+    return emit_yaml(shape, root=root, indent=indent)
 
 
 def main() -> None:
@@ -35,32 +54,15 @@ def main() -> None:
     args = ap.parse_args()
 
     data = json.load(sys.stdin)
-
-    # Shape inference
-    shape: Any
-    if isinstance(data, list):
-        if data and isinstance(data[0], dict):
-            merged = merge_objects(data, sample_n=args.array_samples, max_array=args.array_samples)
-            shape = [merged]
-        else:
-            # for scalar arrays, show union type only
-            # promote to object with single key 'items' for readability
-            from .infer import guess_type
-
-            types_set: set[str] = set()
-            for it in data[: args.array_samples]:
-                for t in guess_type(it):
-                    if isinstance(t, str):
-                        types_set.add(t)
-            ts = sorted(types_set)
-            shape = [{"items": f"array<{' | '.join(ts)}>"}]
-    elif isinstance(data, dict):
-        merged = merge_objects([data], sample_n=args.array_samples, max_array=args.array_samples)
-        shape = merged if not args.force_list else [merged]
-    else:
-        shape = {"value": type(data).__name__.lower()}
-
-    sys.stdout.write(emit_yaml(shape, root=args.root, indent=args.indent))
+    sys.stdout.write(
+        sketch(
+            data,
+            root=args.root,
+            force_list=args.force_list,
+            array_samples=args.array_samples,
+            indent=args.indent,
+        )
+    )
 
 
 if __name__ == "__main__":

@@ -1,0 +1,9 @@
+POIs:
+  -
+    id: int
+    name: string
+    position:
+      lat: number
+      lng: number
+    tags:
+      - string | int

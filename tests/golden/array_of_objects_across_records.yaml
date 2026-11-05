@@ -1,0 +1,5 @@
+-
+  items:
+    -
+      sku: string
+      note: string

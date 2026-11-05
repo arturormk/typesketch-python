@@ -1,0 +1,15 @@
+orders:
+  -
+    created: datetime
+    customer:
+      email: email
+      name: string
+    id: int
+    items:
+      -
+        qty: int
+        sku: string
+    paid: boolean
+    total: int | number
+    coupon: null
+    receipt: url

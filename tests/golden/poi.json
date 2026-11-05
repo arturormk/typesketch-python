@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Shop A",
+    "position": {
+      "lat": 1.0,
+      "lng": 2.0
+    },
+    "tags": [
+      "food",
+      "open"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Shop B",
+    "position": {
+      "lat": 3.0,
+      "lng": 4.0
+    },
+    "tags": [
+      "tech",
+      42
+    ]
+  }
+]

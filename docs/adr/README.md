@@ -10,6 +10,7 @@ This directory contains Architecture Decision Records (ADRs) for the TypeSketch 
 | [ADR-0001](ADR-0001-name-and-scope.md) | Name and Scope | Accepted |
 | [ADR-0002](ADR-0002-language-and-packaging.md) | Language & Packaging | Accepted |
 | [ADR-0003](ADR-0003-heuristics.md) | Inference Heuristics | Accepted |
+| [ADR-0004](ADR-0004-shape-merging.md) | Shape Merging Across Records | Proposed |
 | [ADR-0010](ADR-0010-ai-curation-policy.md) | AI Curation Policy | Accepted |
 
 ## Template
